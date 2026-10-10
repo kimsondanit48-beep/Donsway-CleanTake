@@ -1,0 +1,35 @@
+
+name: Build Donsway CleanTake VST3
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Install CMake
+        uses: lukka/get-cmake@latest
+
+      - name: Download JUCE
+        shell: pwsh
+        run: |
+          git clone --depth 1 --branch 8.0.10 https://github.com/juce-framework/JUCE.git JUCE
+
+      - name: Configure project
+        shell: pwsh
+        run: |
+          cmake -S . -B build -DJUCE_DIR="$env:GITHUB_WORKSPACE/JUCE" -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build VST3
+        run: cmake --build build --config Release --target DonswayCleanTake_VST3
+
+      - name: Upload VST3
+        uses: actions/upload-artifact@v4
+        with:
+          name: Donsway-CleanTake-Windows-VST3
+          path: build/DonswayCleanTake_artefacts/Release/VST3
