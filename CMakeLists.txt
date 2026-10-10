@@ -1,7 +1,8 @@
+```cmake
 cmake_minimum_required(VERSION 3.22)
 project(DonswayCleanTake VERSION 0.1.0)
 
-# Set JUCE_DIR to your JUCE checkout, or install JUCE and point CMake at it.
+# Downloaded JUCE folder is supplied by GitHub Actions
 add_subdirectory("${JUCE_DIR}" JUCE)
 
 juce_add_plugin(DonswayCleanTake
@@ -18,6 +19,9 @@ juce_add_plugin(DonswayCleanTake
     COPY_PLUGIN_AFTER_BUILD TRUE
 )
 
+# Generate JuceHeader.h for the source files
+juce_generate_juce_header(DonswayCleanTake)
+
 target_sources(DonswayCleanTake PRIVATE
     Source/PluginProcessor.cpp
     Source/PluginProcessor.h
@@ -26,11 +30,13 @@ target_sources(DonswayCleanTake PRIVATE
 )
 
 target_compile_features(DonswayCleanTake PRIVATE cxx_std_17)
+
 target_compile_definitions(DonswayCleanTake PUBLIC
     JUCE_WEB_BROWSER=0
     JUCE_USE_CURL=0
     JUCE_VST3_CAN_REPLACE_VST2=0
 )
+
 target_link_libraries(DonswayCleanTake PRIVATE
     juce::juce_audio_utils
     juce::juce_dsp
@@ -39,3 +45,4 @@ target_link_libraries(DonswayCleanTake PRIVATE
     juce::juce_recommended_lto_flags
     juce::juce_recommended_warning_flags
 )
+```
